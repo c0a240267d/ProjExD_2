@@ -1,17 +1,19 @@
 import os
 import random
+import time
 import sys
 import pygame as pg
 
 
 WIDTH, HEIGHT = 1100, 650
 DELTA = {
-    pg.K_UP: (0,-5),
-    pg.K_DOWN: (0,+5),
-    pg.K_LEFT: (-5,0),
-    pg.K_RIGHT: (+5,0),
+    pg.K_UP: (0, -5),
+    pg.K_DOWN: (0, +5),
+    pg.K_LEFT: (-5, 0),
+    pg.K_RIGHT: (+5, 0),
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 
 def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
     """
@@ -34,12 +36,29 @@ def main():
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
-    bb_img = pg.Surface((20,20))
+    bb_img = pg.Surface((20, 20))
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
     bb_rct = bb_img.get_rect()
-    bb_rct.center = random.randint(0,WIDTH), random.randint(0,HEIGHT)
+    bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
     bb_img.set_colorkey((0, 0, 0))
     vx, vy = +5, +5
+
+    bo_img = pg.Surface((WIDTH, HEIGHT))
+    bo_img.set_alpha((180))
+
+    font = pg.font.Font(None, 80)
+    txt = font.render("Game Over", True, (255, 255, 255))
+    
+    img = pg.image.load("fig/8.png")
+
+    def gameover(screen: pg.Surface) -> None:
+        screen.blit(bo_img,(0, 0))
+        screen.blit(txt, [370, 320])
+        screen.blit(img, [300, 300])
+        screen.blit(img, [700, 300])
+        pg.display.update()
+        time.sleep(5)
+        return
 
     clock = pg.time.Clock()
     tmr = 0
@@ -50,6 +69,7 @@ def main():
         screen.blit(bg_img, [0, 0]) 
 
         if kk_rct.colliderect(bb_rct):#こうかとんと爆弾が重なっていたら
+            gameover(screen)
             print("Game Over")
             return
 
@@ -60,14 +80,7 @@ def main():
                 sum_mv[0] += mv[0] #上下方向
                 sum_mv[1] += mv[1] #左右方向
 
-        # if key_lst[pg.K_UP]:
-        #     sum_mv[1] -= 5
-        # if key_lst[pg.K_DOWN]:
-        #     sum_mv[1] += 5
-        # if key_lst[pg.K_LEFT]:
-        #     sum_mv[0] -= 5
-        # if key_lst[pg.K_RIGHT]:
-        #     sum_mv[0] += 5
+    
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True,True):#画面外だったら
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
@@ -79,6 +92,7 @@ def main():
             vx *= -1
         if not tate: #上下どちらかにはみでていたら
             vy *= -1
+        
 
         screen.blit(bb_img, bb_rct)
         pg.display.update()
