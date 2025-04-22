@@ -48,14 +48,14 @@ def main():
 
     font = pg.font.Font(None, 80)
     txt = font.render("Game Over", True, (255, 255, 255))
-    
     img = pg.image.load("fig/8.png")
 
     def gameover(screen: pg.Surface) -> None:
-        screen.blit(bo_img,(0, 0))
-        screen.blit(txt, [370, 320])
-        screen.blit(img, [300, 300])
-        screen.blit(img, [700, 300])
+        screen.blit(bo_img,(0, 0))#ブラックアウト
+        pg.draw.rect(bo_img, (0, 0, 0), (0, 0, WIDTH, HEIGHT))
+        screen.blit(txt, [370, 320])#テキストの表示
+        screen.blit(img, [300, 300])#泣いているこうかとんの表示
+        screen.blit(img, [700, 300])#泣いているこうかとんの表示
         pg.display.update()
         time.sleep(5)
         return
@@ -93,7 +93,7 @@ def main():
         if not tate: #上下どちらかにはみでていたら
             vy *= -1
         
-
+        
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
