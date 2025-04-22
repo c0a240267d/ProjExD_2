@@ -22,10 +22,10 @@ def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
     画面内ならTrue, 画面がならFalse
     """
     yoko, tate = True, True
-    #横方向判定
-    if rct.left < 0 or WIDTH < rct.right: #画面内だったら
+    # 横方向判定
+    if rct.left < 0 or WIDTH < rct.right:  # 画面内だったら
         yoko = False
-    if rct.top < 0 or HEIGHT < rct.bottom: #画面内だったら
+    if rct.top < 0 or HEIGHT < rct.bottom:  # 画面内だったら
         tate = False
     return yoko, tate
 
@@ -51,11 +51,11 @@ def main():
     img = pg.image.load("fig/8.png")
 
     def gameover(screen: pg.Surface) -> None:
-        screen.blit(bo_img,(0, 0))#ブラックアウト
+        screen.blit(bo_img,(0, 0))  # ブラックアウト
         pg.draw.rect(bo_img, (0, 0, 0), (0, 0, WIDTH, HEIGHT))
-        screen.blit(txt, [370, 320])#テキストの表示
-        screen.blit(img, [300, 300])#泣いているこうかとんの表示
-        screen.blit(img, [700, 300])#泣いているこうかとんの表示
+        screen.blit(txt, [370, 320])  # テキストの表示
+        screen.blit(img, [300, 300])  # 泣いているこうかとんの表示
+        screen.blit(img, [700, 300])  # 泣いているこうかとんの表示
         pg.display.update()
         time.sleep(5)
         return
@@ -68,7 +68,7 @@ def main():
                 return
         screen.blit(bg_img, [0, 0]) 
 
-        if kk_rct.colliderect(bb_rct):#こうかとんと爆弾が重なっていたら
+        if kk_rct.colliderect(bb_rct):  # こうかとんと爆弾が重なっていたら
             gameover(screen)
             print("Game Over")
             return
@@ -77,20 +77,20 @@ def main():
         sum_mv = [0, 0]
         for key, mv in DELTA.items():
             if key_lst[key]:
-                sum_mv[0] += mv[0] #上下方向
-                sum_mv[1] += mv[1] #左右方向
+                sum_mv[0] += mv[0]  # 上下方向
+                sum_mv[1] += mv[1]  # 左右方向
 
     
         kk_rct.move_ip(sum_mv)
-        if check_bound(kk_rct) != (True,True):#画面外だったら
+        if check_bound(kk_rct) != (True,True):  # 画面外だったら
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
 
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx, vy)
         yoko,tate = check_bound(bb_rct)
-        if not yoko: #左右どちらかにはみでていたら
+        if not yoko:  # 左右どちらかにはみでていたら
             vx *= -1
-        if not tate: #上下どちらかにはみでていたら
+        if not tate:  # 上下どちらかにはみでていたら
             vy *= -1
         
         
